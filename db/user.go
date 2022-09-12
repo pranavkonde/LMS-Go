@@ -18,7 +18,7 @@ const (
 )
 
 type User struct {
-	ID         int    `db:"id"`
+	ID         string `db:"id"`
 	First_name string `db:"first_name"`
 	Last_name  string `db:"last_name"`
 	Gender     string `db:"gender"`
