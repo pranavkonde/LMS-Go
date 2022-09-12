@@ -46,7 +46,7 @@ func AppPort() int {
 	return appConfig.appPort
 }
 
-func migrationPath() string {
+func MigrationPath() string {
 	return appConfig.migrationPath
 }
 
