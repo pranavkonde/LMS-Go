@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/pranavkonde/Library-Management-System-Golang/config"
+	"github.com/pranavkonde/LMS-Go/config"
 	"github.com/urfave/negroni"
 )
 

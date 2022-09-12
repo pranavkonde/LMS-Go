@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 
-	"github.com/pranavkonde/Library-Managemant-System-Golang/db"
+	"github.com/pranavkonde/LMS-Go/db"
 
 	"go.uber.org/zap"
 )

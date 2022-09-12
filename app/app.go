@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/pranavkonde/Library-Management-System-Golang/config"
+	"github.com/pranavkonde/LMS-Go/config"
 	"go.uber.org/zap"
 )
 

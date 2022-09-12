@@ -13,7 +13,7 @@ import (
 	"github.com/mattes/migrate/database"
 	"github.com/mattes/migrate/database/mysql"
 	_ "github.com/mattes/migrate/source/file"
-	"github.com/pranavkonde/Library-Managemant-System-Golang/config"
+	"github.com/pranavkonde/LMS-Go/config"
 )
 
 var ErrFindingDriver = errors.New("no migrate driver instance found")

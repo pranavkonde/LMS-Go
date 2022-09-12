@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/pranavkonde/Library-Managemant-System-Golang/app"
-	"github.com/pranavkonde/Library-Management-System-Golang/db"
-	"github.com/pranavkonde/Library-Management-System-Golang/user"
+	"github.com/pranavkonde/LMS-Go/app"
+	"github.com/pranavkonde/LMS-Go/db"
+	"github.com/pranavkonde/LMS-Go/user"
 )
 
 type dependencies struct {

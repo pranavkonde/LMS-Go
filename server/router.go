@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/pranavkonde/Library-Managemant-System-Golang/api"
-	"github.com/pranavkonde/Library-Management-System-Golang/config"
-	"github.com/pranavkonde/Library-Management-System-Golang/user"
+	"github.com/pranavkonde/LMS-Go/api"
+	"github.com/pranavkonde/LMS-Go/config"
+	"github.com/pranavkonde/LMS-Go/user"
 )
 
 const (

@@ -1,6 +1,6 @@
 package user
 
-import "github.com/pranavkonde/Library-Managemant-System-Golang/db"
+import "github.com/pranavkonde/LMS-Go/db"
 
 type updateRequest struct {
 	ID         string `json:"id"`

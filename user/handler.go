@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/pranavkonde/Library-Managemant-System-Golang/api"
+	"github.com/pranavkonde/LMS-Go/api"
 )
 
 func Create(service Service) http.HandlerFunc {

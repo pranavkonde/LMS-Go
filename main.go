@@ -3,10 +3,10 @@ package main
 import (
 	"os"
 
-	"github.com/pranavkonde/Library-Managemant-System-Golang/app"
-	"github.com/pranavkonde/Library-Managemant-System-Golang/db"
-	"github.com/pranavkonde/Library-Managemant-System-Golang/server"
-	"github.com/pranavkonde/Library-Management-System-Golang/config"
+	"github.com/pranavkonde/LMS-Go/app"
+	"github.com/pranavkonde/LMS-Go/config"
+	"github.com/pranavkonde/LMS-Go/db"
+	"github.com/pranavkonde/LMS-Go/server"
 	"github.com/urfave/cli"
 )
 

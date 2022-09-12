@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/pranavkonde/Library-Management-System-Golang/app"
+	"github.com/pranavkonde/LMS-Go/app"
 )
 
 type Response struct {
