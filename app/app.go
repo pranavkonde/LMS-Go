@@ -44,7 +44,7 @@ func initDB() (err error) {
 	}
 
 	db.SetMaxIdleConns(dbConfig.MaxPoolSize())
-	db.SetMaxOpenConns(dbConfig.MaxOpenCons())
+	db.SetMaxOpenConns(dbConfig.MaxOpenConns())
 	db.SetConnMaxLifetime(time.Duration(dbConfig.MaxLifeTimeMins()) * time.Minute)
 
 	return

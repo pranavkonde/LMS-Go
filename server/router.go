@@ -1,38 +1,30 @@
 package server
 
 import (
-	"fmt"
-	"net/http"
+    "net/http"
 
-	"github.com/gorilla/mux"
-	"github.com/pranavkonde/LMS-Go/api"
-	"github.com/pranavkonde/LMS-Go/config"
-	"github.com/pranavkonde/LMS-Go/user"
+    "github.com/gorilla/mux"
+    "github.com/pranavkonde/LMS/api"
+    "github.com/pranavkonde/LMS/user"
 )
 
 const (
-	versionHeader = "Accept"
+// versionHeader = "Accept"
 )
 
 func initRouter(dep dependencies) (router *mux.Router) {
-	v1 := fmt.Sprintf("application/vnd.%s.v1", config.AppName())
+    // v1 := fmt.Sprintf("application/vnd.%s.v1", config.AppName())
 
-	router = mux.NewRouter()
-	router.HandleFunc("/ping", pingHandler).Methods(http.MethodGet)
-
-	//User
-
-	router.HandleFunc("/users", user.Create(dep.UserService)).Methods(http.MethodPost).Headers(versionHeader, v1)
-	router.HandleFunc("/users", user.List(dep.UserService)).Methods(http.MethodGet).Headers(versionHeader, v1)
-	router.HandleFunc("/users/{user_id}", user.FindByID(dep.UserService)).Methods(http.MethodGet).Headers(versionHeader, v1)
-	router.HandleFunc("/users/{user_id}", user.DeleteByID(dep.UserService)).Methods(http.MethodDelete).Headers(versionHeader, v1)
-	router.HandleFunc("/users", user.Update(dep.UserService)).Methods(http.MethodPut).Headers(versionHeader, v1)
-
-	sh := http.StripPrefix("/docs/", http.FileServer(http.Dir("./swaggerui/")))
-	router.PathPrefix("/docs/").Handler(sh)
-	return
+    router = mux.NewRouter()
+    router.HandleFunc("/ping", pingHandler).Methods(http.MethodGet)
+    router.HandleFunc("/users", user.Create(dep.UserService)).Methods(http.MethodPost)
+    router.HandleFunc("/users", user.List(dep.UserService)).Methods(http.MethodGet)
+    router.HandleFunc("/users/{id}", user.FindByID(dep.UserService)).Methods(http.MethodGet)
+    router.HandleFunc("/users/{id}", user.DeleteByID(dep.UserService)).Methods(http.MethodDelete)
+    router.HandleFunc("/users", user.Update(dep.UserService)).Methods(http.MethodPut)
+    return
 }
 
 func pingHandler(rw http.ResponseWriter, req *http.Request) {
-	api.Success(rw, http.StatusOK, api.Response{Message: "pong"})
+    api.Success(rw, http.StatusOK, api.Response{Message: "pong"})
 }

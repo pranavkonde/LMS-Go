@@ -3,35 +3,52 @@ package user
 import "github.com/pranavkonde/LMS-Go/db"
 
 type updateRequest struct {
-	ID         string `json:"id"`
-	First_Name string `json:"name"`
+    ID        string `json:"id"`
+    FirstName string `json:"first_name"`
+    LastName  string `json:"last_name"`
+    Gender    string `json:"gender"`
+    Age       int    `json:"age"`
+    Address   string `json:"address"`
+    Email     string `json:"email"`
+    Password  string `json:"password"`
+    MobileNum string `json:"mob_no"`
+    Role      string `json:"role"`
 }
 
 type createRequest struct {
-	First_Name string `json:"first_name"`
+    ID        string `json:"id"`
+    FirstName string `json:"first_name"`
+    LastName  string `json:"last_name"`
+    Gender    string `json:"gender"`
+    Age       int    `json:"age"`
+    Address   string `json:"address"`
+    Email     string `json:"email"`
+    Password  string `json:"password"`
+    MobileNum string `json:"mob_no"`
+    Role      string `json:"role"`
 }
 
 type findByIDResponse struct {
-	User db.User `json:"user"`
+    User db.User `json:"user"`
 }
 
 type listResponse struct {
-	Users []db.User `json:"users"`
+    User []db.User `json:"users"`
 }
 
 func (cr createRequest) Validate() (err error) {
-	if cr.First_Name == "" {
-		return errEmptyName
-	}
-	return
+    if cr.FirstName == "" {
+        return errEmptyName
+    }
+    return
 }
 
 func (ur updateRequest) Validate() (err error) {
-	if ur.ID == "" {
-		return errEmptyID
-	}
-	if ur.First_Name == "" {
-		return errEmptyName
-	}
-	return
+    if ur.ID == "" {
+        return errEmptyID
+    }
+    if ur.FirstName == "" {
+        return errEmptyName
+    }
+    return
 }

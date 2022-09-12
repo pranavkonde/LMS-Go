@@ -17,12 +17,12 @@ const (
 )
 
 type Storer interface {
-	//User
-	// CreateUser(ctx context.Context, user *User) (err error)
-	// ListUsers(ctx context.Context) (users []User, err error)
-	// FindUserByID(ctx context.Context, id string) (user User, err error)
-	// DeleteUserByID(ctx context.Context, id string) (err error)
-	// UpdateUser(ctx context.Context, user *User) (err error)
+	// Category
+	CreateUser(ctx context.Context, user *User) (err error)
+	ListUsers(ctx context.Context) (users []User, err error)
+	FindUserByID(ctx context.Context, id string) (user User, err error)
+	DeleteUserByID(ctx context.Context, id string) (err error)
+	UpdateUser(ctx context.Context, category *User) (err error)
 }
 
 type store struct {
@@ -56,6 +56,7 @@ func Transact(ctx context.Context, dbx *sqlx.DB, opts *sql.TxOptions, txFunc fun
 		}
 		err = errors.WithStack(tx.Commit())
 	}()
+
 	ctxWithTx := newContext(ctx, tx)
 	err = WithDefaultTimeout(ctxWithTx, txFunc)
 	return err

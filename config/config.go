@@ -17,14 +17,14 @@ type config struct {
 
 var appConfig config
 
-// viper :=Viper is a complete configuration solution for Go applications including 12-Factor apps. It is designed to work within an application, and can handle all types of configuration needs and formats.
-
 func Load() {
-	viper.SetDefault("APP_NAME", "LMS")
+	viper.SetDefault("APP_NAME", "Library")
 	viper.SetDefault("APP_PORT", "8000")
+
 	viper.SetConfigName("application")
-	viper.SetConfigType("yaml") //YAML is a data serialization language that is often used for writing configuration files
-	viper.AddConfigPath("./")   // To add config
+
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath("./")
 	viper.AddConfigPath("./..")
 	viper.AddConfigPath("./../..")
 	viper.ReadInConfig()
@@ -36,18 +36,6 @@ func Load() {
 		migrationPath: readEnvString("MIGRATION_PATH"),
 		db:            newDatabaseConfig(),
 	}
-}
-
-func AppName() string {
-	return appConfig.appName
-}
-
-func AppPort() int {
-	return appConfig.appPort
-}
-
-func MigrationPath() string {
-	return appConfig.migrationPath
 }
 
 func readEnvInt(key string) int {
@@ -63,10 +51,21 @@ func readEnvString(key string) string {
 	checkIfSet(key)
 	return viper.GetString(key)
 }
-
 func checkIfSet(key string) {
 	if !viper.IsSet(key) {
 		err := errors.New(fmt.Sprintf("Key %s is not set", key))
 		panic(err)
 	}
+}
+
+func AppName() string {
+	return appConfig.appName
+}
+
+func AppPort() int {
+	return appConfig.appPort
+}
+
+func MigrationPath() string {
+	return appConfig.migrationPath
 }
