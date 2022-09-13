@@ -17,12 +17,19 @@ const (
 )
 
 type Storer interface {
-	// Category
+	// user
 	CreateUser(ctx context.Context, user *User) (err error)
 	ListUsers(ctx context.Context) (users []User, err error)
 	FindUserByID(ctx context.Context, id string) (user User, err error)
 	DeleteUserByID(ctx context.Context, id string) (err error)
 	UpdateUser(ctx context.Context, category *User) (err error)
+
+	// book
+	CreateBook(ctx context.Context, book *Book) (err error)
+	ListBooks(ctx context.Context) (books []Book, err error)
+	FindBookByID(ctx context.Context, id string) (book Book, err error)
+	DeleteBookByID(ctx context.Context, id string) (err error)
+	UpdateBook(ctx context.Context, category *Book) (err error)
 }
 
 type store struct {

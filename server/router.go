@@ -5,6 +5,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/pranavkonde/LMS-Go/api"
+	"github.com/pranavkonde/LMS-Go/book"
 	"github.com/pranavkonde/LMS-Go/user"
 )
 
@@ -22,6 +23,12 @@ func initRouter(dep dependencies) (router *mux.Router) {
 	router.HandleFunc("/users/{id}", user.FindByID(dep.UserService)).Methods(http.MethodGet)
 	router.HandleFunc("/users/{id}", user.DeleteByID(dep.UserService)).Methods(http.MethodDelete)
 	router.HandleFunc("/users", user.Update(dep.UserService)).Methods(http.MethodPut)
+
+	router.HandleFunc("/books", book.Create(dep.BookService)).Methods(http.MethodPost)
+	router.HandleFunc("/books", book.List(dep.BookService)).Methods(http.MethodGet)
+	router.HandleFunc("/books/{id}", book.FindByID(dep.BookService)).Methods(http.MethodGet)
+	router.HandleFunc("/books/{id}", book.DeleteByID(dep.BookService)).Methods(http.MethodDelete)
+	router.HandleFunc("/books", book.Update(dep.BookService)).Methods(http.MethodPut)
 	return
 }
 
