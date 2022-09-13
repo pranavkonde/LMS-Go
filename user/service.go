@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/pranavkonde/LMS-Go/db"
 	"go.uber.org/zap"
 )
@@ -41,7 +42,8 @@ func (cs *userService) create(ctx context.Context, c createRequest) (err error) 
 		cs.logger.Errorw("Invalid request for user create", "msg", err.Error(), "user", c)
 		return
 	}
-
+	uuidgen := uuid.New()
+	c.ID = uuidgen.String()
 	err = cs.store.CreateUser(ctx, &db.User{
 		ID:        c.ID,
 		FirstName: c.FirstName,
@@ -71,6 +73,12 @@ func (cs *userService) update(ctx context.Context, c updateRequest) (err error) 
 	err = cs.store.UpdateUser(ctx, &db.User{
 		ID:        c.ID,
 		FirstName: c.FirstName,
+		LastName:  c.LastName,
+		Gender:    c.Gender,
+		Address:   c.Address,
+		Age:       c.Age,
+		Password:  c.Password,
+		MobileNum: c.MobileNum,
 	})
 	if err != nil {
 		cs.logger.Error("Error updating user", "err", err.Error(), "user", c)

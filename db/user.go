@@ -24,7 +24,7 @@ const (
 	listUsersQuery      = `SELECT * FROM users`
 	findUserByIDQuery   = `SELECT * FROM users WHERE id = ?`
 	deleteUserByIDQuery = `DELETE FROM users WHERE id = ?`
-	updateUserQuery     = `UPDATE users SET name = ?, updated_at = ? where id = ?`
+	updateUserQuery     = `UPDATE users SET first_name = ?, last_name=?, gender=?,age=?,address=?,password=?,mob_no = ? where id = ?`
 )
 
 func (s *store) CreateUser(ctx context.Context, user *User) (err error) {
@@ -87,6 +87,12 @@ func (s *store) UpdateUser(ctx context.Context, user *User) (err error) {
 		_, err = s.db.Exec(
 			updateUserQuery,
 			user.FirstName,
+			user.LastName,
+			user.Gender,
+			user.Age,
+			user.Address,
+			user.Password,
+			user.MobileNum,
 			user.ID,
 		)
 		return err
