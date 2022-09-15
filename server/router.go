@@ -19,6 +19,7 @@ func initRouter(dep dependencies) (router *mux.Router) {
 
 	router = mux.NewRouter()
 	router.HandleFunc("/ping", pingHandler).Methods(http.MethodGet)
+	router.HandleFunc("/login", user.Login()).Methods(http.MethodPost)
 	router.HandleFunc("/users", user.Create(dep.UserService)).Methods(http.MethodPost)
 	router.HandleFunc("/users", user.List(dep.UserService)).Methods(http.MethodGet)
 	router.HandleFunc("/users/{id}", user.FindByID(dep.UserService)).Methods(http.MethodGet)
