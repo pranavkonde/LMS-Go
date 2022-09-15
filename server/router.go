@@ -31,11 +31,9 @@ func initRouter(dep dependencies) (router *mux.Router) {
 	router.HandleFunc("/books/{id}", book.DeleteByID(dep.BookService)).Methods(http.MethodDelete)
 	router.HandleFunc("/books", book.Update(dep.BookService)).Methods(http.MethodPut)
 
-	router.HandleFunc("/transactions", transaction.Create(dep.TransactionService)).Methods(http.MethodPost)
-	// router.HandleFunc("/books", transaction.List(dep.BookService)).Methods(http.MethodGet)
-	// router.HandleFunc("/books/{id}", transaction.FindByID(dep.BookService)).Methods(http.MethodGet)
-	// router.HandleFunc("/books/{id}", transaction.DeleteByID(dep.BookService)).Methods(http.MethodDelete)
-	// router.HandleFunc("/books", transaction.Update(dep.BookService)).Methods(http.MethodPut)
+	router.HandleFunc("/userbook/issue", transaction.Create(dep.TransactionService)).Methods(http.MethodPost)
+	router.HandleFunc("/userbook", transaction.List(dep.TransactionService)).Methods(http.MethodGet)
+	router.HandleFunc("/userbook/return", transaction.Update(dep.TransactionService)).Methods(http.MethodPut)
 	return
 }
 
