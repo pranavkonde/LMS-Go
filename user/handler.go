@@ -2,6 +2,7 @@ package user
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -17,6 +18,12 @@ type JWTClaim struct {
 	Email  string `json:email`
 	Role   string `json:role`
 	jwt.StandardClaims
+}
+
+type TokenData struct {
+	UserID string
+	Email  string
+	Role   string
 }
 
 var jwtKey = []byte("yu78jhe5$r")
@@ -58,6 +65,59 @@ func GenerateJWT(UserID string, Email string, Role string) (tokenString string, 
 	return
 }
 
+func Authorize(handler http.HandlerFunc, role string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		token := r.Header.Get("Authorization")
+
+		isValid, tokenData, err := ValidateToken(token)
+		if err != nil {
+			fmt.Println("error")
+		}
+
+		if !isValid {
+			//Send error response to api
+		}
+
+		tokenRole := tokenData.Role
+
+		fmt.Println("Role : ", tokenRole)
+
+		handler.ServeHTTP(w, r)
+		return
+	}
+}
+
+func ValidateToken(signedToken string) (isValid bool, tokenData TokenData, err error) {
+	token, err := jwt.ParseWithClaims(
+		signedToken,
+		&JWTClaim{},
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(jwtKey), nil
+		},
+	)
+	if err != nil {
+		return
+	}
+	claims, ok := token.Claims.(*JWTClaim)
+	if !ok {
+		err = errors.New("couldn't parse claims")
+		return
+	}
+	if claims.ExpiresAt < time.Now().Local().Unix() {
+		err = errors.New("token expired")
+		return
+	}
+
+	isValid = true
+
+	tokenData = TokenData{
+		UserID: claims.UserID,
+		Email:  claims.Email,
+		Role:   claims.Role,
+	}
+	return
+}
 func Create(service Service) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		// api.Success(rw, http.StatusOK, api.Response{Message: "hi"})

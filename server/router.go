@@ -6,7 +6,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/pranavkonde/LMS-Go/api"
 	"github.com/pranavkonde/LMS-Go/book"
-	"github.com/pranavkonde/LMS-Go/transaction"
 	"github.com/pranavkonde/LMS-Go/user"
 )
 
@@ -20,22 +19,23 @@ func initRouter(dep dependencies) (router *mux.Router) {
 	router = mux.NewRouter()
 	router.HandleFunc("/ping", pingHandler).Methods(http.MethodGet)
 	router.HandleFunc("/login", user.Login()).Methods(http.MethodPost)
-	router.HandleFunc("/users", user.Create(dep.UserService)).Methods(http.MethodPost)
-	router.HandleFunc("/users", user.List(dep.UserService)).Methods(http.MethodGet)
-	router.HandleFunc("/users/{id}", user.FindByID(dep.UserService)).Methods(http.MethodGet)
-	router.HandleFunc("/users/{id}", user.DeleteByID(dep.UserService)).Methods(http.MethodDelete)
-	router.HandleFunc("/users", user.Update(dep.UserService)).Methods(http.MethodPut)
+	router.HandleFunc("/users", user.Authorize(user.Create(dep.UserService), "RoleAdmin")).Methods(http.MethodPost)
+	router.HandleFunc("/users", user.Authorize(user.List(dep.UserService), "RoleAdmin")).Methods(http.MethodGet)
+	router.HandleFunc("/users/{id}", user.Authorize(user.FindByID(dep.UserService), "UserService")).Methods(http.MethodGet)
+	router.HandleFunc("/users/{id}", user.Authorize(user.DeleteByID(dep.UserService), "RoleAdmin")).Methods(http.MethodDelete)
+	router.HandleFunc("/users", user.Authorize(user.Update(dep.UserService), "RoleUser")).Methods(http.MethodPut)
 
-	router.HandleFunc("/books", book.Create(dep.BookService)).Methods(http.MethodPost)
-	router.HandleFunc("/books", book.List(dep.BookService)).Methods(http.MethodGet)
-	router.HandleFunc("/books/{id}", book.FindByID(dep.BookService)).Methods(http.MethodGet)
-	router.HandleFunc("/books/{id}", book.DeleteByID(dep.BookService)).Methods(http.MethodDelete)
-	router.HandleFunc("/books", book.Update(dep.BookService)).Methods(http.MethodPut)
+	router.HandleFunc("/books", user.Authorize(book.Create(dep.BookService), "RoleAdmin")).Methods(http.MethodPost)
+	router.HandleFunc("/books", user.Authorize(book.List(dep.BookService), "RoleUser")).Methods(http.MethodGet)
+	router.HandleFunc("/books/{id}", user.Authorize(book.FindByID(dep.BookService), "RoleUser")).Methods(http.MethodGet)
+	router.HandleFunc("/books/{id}", user.Authorize(book.DeleteByID(dep.BookService), "Admin")).Methods(http.MethodDelete)
+	router.HandleFunc("/books", user.Authorize(book.DeleteByID(dep.BookService), "RoleAdmin")).Methods(http.MethodPut)
 
-	router.HandleFunc("/userbook/issue", transaction.Create(dep.TransactionService)).Methods(http.MethodPost)
-	router.HandleFunc("/userbook", transaction.List(dep.TransactionService)).Methods(http.MethodGet)
-	router.HandleFunc("/userbook/return", transaction.Update(dep.TransactionService)).Methods(http.MethodPut)
+	router.HandleFunc("/userbook/issue", user.Authorize(book.DeleteByID(dep.BookService), "RoleAdmin")).Methods(http.MethodPost)
+	router.HandleFunc("/userbook", user.Authorize(book.DeleteByID(dep.BookService), "RoleAdmin")).Methods(http.MethodGet)
+	router.HandleFunc("/userbook/return", user.Authorize(book.DeleteByID(dep.BookService), "RoleAdmin")).Methods(http.MethodPut)
 	return
+
 }
 
 func pingHandler(rw http.ResponseWriter, req *http.Request) {
