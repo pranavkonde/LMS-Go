@@ -12,6 +12,8 @@ const (
         VALUES(?, ?, ?, ?, ?, ?)`
 	listTransactionsQuery  = `SELECT * FROM transaction`
 	updateTransactionQuery = `UPDATE transaction SET return_date=? WHERE book_id=? AND user_id=? AND return_date=0 `
+	issueCopyQuery         = `UPDATE books SET availablecopies=availablecopies-1 WHERE id = ? AND availablecopies>0`
+	returnCopyQuery        = `UPDATE books SET availablecopies=availablecopies+1 WHERE id = ?`
 )
 
 type Transaction struct {
@@ -37,6 +39,14 @@ func (s *store) CreateTransaction(ctx context.Context, transaction *Transaction)
 			transaction.BookID,
 			transaction.UserID,
 		)
+		if err != nil {
+			return err
+		}
+
+		_, err = s.db.Exec(
+			issueCopyQuery,
+			transaction.BookID,
+		)
 		return err
 	})
 }
@@ -59,6 +69,14 @@ func (s *store) UpdateTransaction(ctx context.Context, transaction *Transaction)
 			transaction.ReturnDate,
 			transaction.BookID,
 			transaction.UserID,
+		)
+		if err != nil {
+			return err
+		}
+
+		_, err = s.db.Exec(
+			returnCopyQuery,
+			transaction.BookID,
 		)
 		return err
 	})

@@ -1,6 +1,10 @@
 package user
 
-import "github.com/pranavkonde/LMS-Go/db"
+import (
+	"net/mail"
+
+	"github.com/pranavkonde/LMS-Go/db"
+)
 
 type updateRequest struct {
 	ID        string `json:"id"`
@@ -39,6 +43,37 @@ type listResponse struct {
 func (cr createRequest) Validate() (err error) {
 	if cr.FirstName == "" {
 		return errEmptyName
+	}
+	if cr.LastName == "" {
+		return errEmptyLastName
+	}
+	if cr.Password == "" {
+		return errEmptyPassword
+	}
+	if cr.Gender == "" {
+		return errEmptyGender
+	}
+	if cr.Address == "" {
+		return errEmptyAddress
+	}
+	if cr.Email == "" {
+		return errEmptyEmail
+	}
+	if cr.MobileNum == "" {
+		return errEmptyMobNo
+	}
+	if cr.Role == "" {
+		return errEmptyRole
+	}
+	if cr.Role != "user" && cr.Role != "admin" && cr.Role != "superadmin" {
+		return errRoleType
+	}
+	_, b := mail.ParseAddress(cr.Email)
+	if b != nil {
+		return errNotValidMail
+	}
+	if len(cr.MobileNum) < 10 || len(cr.MobileNum) > 10 {
+		return errInvalidMobNo
 	}
 	return
 }

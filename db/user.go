@@ -21,10 +21,11 @@ type User struct {
 const (
 	createUserQuery = `INSERT INTO users (id,first_name, last_name, gender,age,address,email,password,mob_no,role)
     VALUES(?, ?,?,?,?,?,?,?,?,?)`
-	listUsersQuery      = `SELECT * FROM users`
-	findUserByIDQuery   = `SELECT * FROM users WHERE id = ?`
-	deleteUserByIDQuery = `DELETE FROM users WHERE id = ?`
-	updateUserQuery     = `UPDATE users SET first_name = ?, last_name=?, gender=?,age=?,address=?,password=?,mob_no = ? where id = ?`
+	listUsersQuery       = `SELECT * FROM users`
+	findUserByIDQuery    = `SELECT * FROM users WHERE id = ?`
+	deleteUserByIDQuery  = `DELETE FROM users WHERE id = ?`
+	updateUserQuery      = `UPDATE users SET first_name = ?, last_name=?, gender=?,age=?,address=?,password=?,mob_no = ? where id = ?`
+	findUserByEmailQuery = `SELECT * FROM users WHERE email = ?`
 )
 
 func (s *store) CreateUser(ctx context.Context, user *User) (err error) {
@@ -97,4 +98,13 @@ func (s *store) UpdateUser(ctx context.Context, user *User) (err error) {
 		)
 		return err
 	})
+}
+func (s *store) FindUserByEmail(ctx context.Context, email string) (user User, err error) {
+	err = WithDefaultTimeout(ctx, func(ctx context.Context) error {
+		return s.db.GetContext(ctx, &user, findUserByEmailQuery, email)
+	})
+	if err == sql.ErrNoRows {
+		return user, ErrUserNotExist
+	}
+	return
 }
