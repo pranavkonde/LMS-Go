@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/pranavkonde/LMS-Go/api"
 	"github.com/pranavkonde/LMS-Go/book"
+	"github.com/pranavkonde/LMS-Go/transaction"
 	"github.com/pranavkonde/LMS-Go/user"
 )
 
@@ -117,12 +118,12 @@ func initRouter(dep dependencies) (router *mux.Router) {
 	router.HandleFunc("/books", Authorize(book.Create(dep.BookService), ADMIN)).Methods(http.MethodPost)
 	router.HandleFunc("/books", Authorize(book.List(dep.BookService), USER)).Methods(http.MethodGet)
 	router.HandleFunc("/books/{id}", Authorize(book.FindByID(dep.BookService), USER)).Methods(http.MethodGet)
+	router.HandleFunc("/books", Authorize(book.Update(dep.BookService), ADMIN)).Methods(http.MethodPut)
 	router.HandleFunc("/books/{id}", Authorize(book.DeleteByID(dep.BookService), ADMIN)).Methods(http.MethodDelete)
-	router.HandleFunc("/books", Authorize(book.DeleteByID(dep.BookService), ADMIN)).Methods(http.MethodPut)
 
-	router.HandleFunc("/userbook/issue", Authorize(book.DeleteByID(dep.BookService), ADMIN)).Methods(http.MethodPost)
-	router.HandleFunc("/userbook", Authorize(book.DeleteByID(dep.BookService), ADMIN)).Methods(http.MethodGet)
-	router.HandleFunc("/userbook/return", Authorize(book.DeleteByID(dep.BookService), ADMIN)).Methods(http.MethodPut)
+	router.HandleFunc("/userbook/issue", Authorize(transaction.Create(dep.TransactionService), ADMIN)).Methods(http.MethodPost)
+	router.HandleFunc("/userbook", Authorize(transaction.List(dep.TransactionService), ADMIN)).Methods(http.MethodGet)
+	router.HandleFunc("/userbook/return", Authorize(transaction.Update(dep.TransactionService), ADMIN)).Methods(http.MethodPut)
 	return
 
 }
