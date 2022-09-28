@@ -31,6 +31,7 @@ type Service interface {
 	DeleteByID(ctx context.Context, id string) (err error)
 	Update(ctx context.Context, req UpdateRequest) (err error)
 	GenerateJWT(ctx context.Context, Email string, Password string) (tokenString string, err error)
+	UpdatePassword(ctx context.Context, req UpdatePasswordStruct) (err error)
 }
 
 func (cs *UserService) GenerateJWT(ctx context.Context, Email string, Password string) (tokenString string, err error) {
@@ -130,7 +131,24 @@ func (cs *UserService) Update(ctx context.Context, c UpdateRequest) (err error) 
 
 	return
 }
+func (cs *UserService) UpdatePassword(ctx context.Context, c UpdatePasswordStruct) (err error) {
+	// err = c.Validate()
+	if err != nil {
+		cs.logger.Error("Invalid Request for user update", "err", err.Error(), "user", c)
+		return
+	}
 
+	err = cs.store.UpdatePassword(ctx, &db.User{
+		ID:       c.ID,
+		Password: c.NewPassword,
+	})
+	if err != nil {
+		cs.logger.Error("Error updating user", "err", err.Error(), "user", c)
+		return
+	}
+
+	return
+}
 func (cs *UserService) FindByID(ctx context.Context, id string) (response FindByIDResponse, err error) {
 	user, err := cs.store.FindUserByID(ctx, id)
 	if err == db.ErrUserNotExist {

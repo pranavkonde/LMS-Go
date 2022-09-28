@@ -114,6 +114,7 @@ func initRouter(dep dependencies) (router *mux.Router) {
 	router.HandleFunc("/users/{id}", Authorize(user.FindByID(dep.UserService), USER)).Methods(http.MethodGet)
 	router.HandleFunc("/users/{id}", Authorize(user.DeleteByID(dep.UserService), ADMIN)).Methods(http.MethodDelete)
 	router.HandleFunc("/users", Authorize(user.Update(dep.UserService), USER)).Methods(http.MethodPut)
+	router.HandleFunc("/updatepassword", Authorize(user.UpdatePassword(dep.UserService), USER)).Methods(http.MethodPut)
 
 	router.HandleFunc("/books", Authorize(book.Create(dep.BookService), ADMIN)).Methods(http.MethodPost)
 	router.HandleFunc("/books", Authorize(book.List(dep.BookService), USER)).Methods(http.MethodGet)

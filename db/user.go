@@ -21,11 +21,12 @@ type User struct {
 const (
 	createUserQuery = `INSERT INTO users (id,first_name, last_name, gender,age,address,email,password,mob_no,role)
     VALUES(?, ?,?,?,?,?,?,?,?,?)`
-	listUsersQuery       = `SELECT * FROM users`
-	findUserByIDQuery    = `SELECT * FROM users WHERE id = ?`
-	deleteUserByIDQuery  = `DELETE FROM users WHERE id = ?`
-	updateUserQuery      = `UPDATE users SET first_name = ?, last_name=?, gender=?,age=?,address=?,password=?,mob_no = ? where id = ?`
-	findUserByEmailQuery = `SELECT * FROM users WHERE email = ?`
+	listUsersQuery          = `SELECT * FROM users`
+	findUserByIDQuery       = `SELECT * FROM users WHERE id = ?`
+	deleteUserByIDQuery     = `DELETE FROM users WHERE id = ?`
+	updateUserQuery         = `UPDATE users SET first_name = ?, last_name=?, gender=?,age=?,address=?,password=?,mob_no = ? where id = ?`
+	findUserByEmailQuery    = `SELECT * FROM users WHERE email = ?`
+	updateUserPasswordQuery = `UPDATE users SET password = ? WHERE id =?`
 )
 
 func (s *store) CreateUser(ctx context.Context, user *User) (err error) {
@@ -107,4 +108,16 @@ func (s *store) FindUserByEmail(ctx context.Context, email string) (user User, e
 		return user, ErrUserNotExist
 	}
 	return
+}
+func (s *store) UpdatePassword(ctx context.Context, user *User) (err error) {
+	// now := time.Now()
+
+	return Transact(ctx, s.db, &sql.TxOptions{}, func(ctx context.Context) error {
+		_, err = s.db.Exec(
+			updateUserPasswordQuery,
+			user.Password,
+			user.ID,
+		)
+		return err
+	})
 }

@@ -32,6 +32,11 @@ type CreateRequest struct {
 	MobileNum string `json:"mob_no"`
 	Role      string `json:"role"`
 }
+type UpdatePasswordStruct struct {
+	ID          string `json:"id"`
+	Password    string `json:"password"`
+	NewPassword string `json:"new_password"`
+}
 
 type FindByIDResponse struct {
 	User db.User `json:"user"`

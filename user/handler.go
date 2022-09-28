@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/pranavkonde/LMS-Go/api"
+	"github.com/pranavkonde/LMS-Go/db"
 )
 
 type Authentication struct {
@@ -118,6 +119,8 @@ func DeleteByID(service Service) http.HandlerFunc {
 	})
 }
 
+var v db.User
+
 func Update(service Service) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		var c UpdateRequest
@@ -139,6 +142,42 @@ func Update(service Service) http.HandlerFunc {
 		}
 
 		api.Success(rw, http.StatusOK, api.Response{Message: "Updated Successfully"})
+	})
+}
+
+func UpdatePassword(service Service) http.HandlerFunc {
+	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		var c UpdatePasswordStruct
+		resp, err := service.List(req.Context())
+		if err != nil {
+			api.Error(rw, http.StatusBadRequest, api.Response{Message: err.Error()})
+			return
+		}
+
+		err = json.NewDecoder(req.Body).Decode(&c)
+
+		if err != nil {
+			api.Error(rw, http.StatusBadRequest, api.Response{Message: err.Error()})
+			return
+		}
+
+		for _, v = range resp.User {
+			if v.ID == c.ID && v.Password == c.Password {
+				err = service.UpdatePassword(req.Context(), c)
+				if isBadRequest(err) {
+					api.Error(rw, http.StatusBadRequest, api.Response{Message: err.Error()})
+					return
+				}
+
+				if err != nil {
+					api.Error(rw, http.StatusInternalServerError, api.Response{Message: err.Error()})
+					return
+				}
+
+				api.Success(rw, http.StatusOK, api.Response{Message: "Updated Successfully"})
+			}
+		}
+
 	})
 }
 
