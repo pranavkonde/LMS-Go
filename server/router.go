@@ -65,7 +65,6 @@ func Authorize(handler http.HandlerFunc, role int) http.HandlerFunc {
 			api.Error(w, http.StatusBadRequest, api.Response{Message: "You don't have the access"})
 			return
 		}
-
 		handler.ServeHTTP(w, r)
 		return
 	}
@@ -125,6 +124,7 @@ func initRouter(dep dependencies) (router *mux.Router) {
 	router.HandleFunc("/userbook/issue", Authorize(transaction.Create(dep.TransactionService), ADMIN)).Methods(http.MethodPost)
 	router.HandleFunc("/userbook", Authorize(transaction.List(dep.TransactionService), ADMIN)).Methods(http.MethodGet)
 	router.HandleFunc("/userbook/return", Authorize(transaction.Update(dep.TransactionService), ADMIN)).Methods(http.MethodPut)
+	router.HandleFunc("/bookstatus", Authorize(transaction.GetBookStatus(dep.TransactionService), USER)).Methods(http.MethodGet)
 	return
 
 }

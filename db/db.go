@@ -37,6 +37,7 @@ type Storer interface {
 	CreateTransaction(ctx context.Context, transaction *Transaction) (err error)
 	ListTransactions(ctx context.Context) (transactions []Transaction, err error)
 	UpdateTransaction(ctx context.Context, category *Transaction) (err error)
+	BookStatus(ctx context.Context, BookId string, UserID string) (res string, err error)
 }
 
 type store struct {
