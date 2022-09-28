@@ -2,6 +2,7 @@ package user
 
 import (
 	"net/mail"
+	"unicode"
 
 	"github.com/pranavkonde/LMS-Go/db"
 )
@@ -44,14 +45,24 @@ func (cr CreateRequest) Validate() (err error) {
 	if cr.FirstName == "" {
 		return errEmptyName
 	}
+	for _, r := range cr.FirstName {
+		if !unicode.IsLetter(r) {
+			return errInvalidFirstName
+		}
+	}
 	if cr.LastName == "" {
 		return errEmptyLastName
+	}
+	for _, r := range cr.LastName {
+		if !unicode.IsLetter(r) {
+			return errInvalidLastName
+		}
 	}
 	if cr.Password == "" {
 		return errEmptyPassword
 	}
-	if cr.Gender == "" {
-		return errEmptyGender
+	if cr.Gender == "" || cr.Gender != "Male" && cr.Gender != "male" && cr.Gender != "Female" && cr.Gender != "female" && cr.Gender != "other" && cr.Gender != "Other" {
+		return errInvalidGender
 	}
 	if cr.Address == "" {
 		return errEmptyAddress
@@ -65,13 +76,35 @@ func (cr CreateRequest) Validate() (err error) {
 	if cr.Role == "" {
 		return errEmptyRole
 	}
-	if cr.Role != "user" && cr.Role != "admin" && cr.Role != "superadmin" {
+	if cr.Role != "user" && cr.Role != "admin" {
 		return errRoleType
 	}
 	_, b := mail.ParseAddress(cr.Email)
 	if b != nil {
 		return errNotValidMail
 	}
+	checkEmail := cr.Email
+	flag := false
+	lastapperance := 0
+	for i := 0; i < len(checkEmail); i++ {
+		if checkEmail[i] == '@' {
+			flag = true
+			lastapperance = i
+		}
+	}
+	if !flag {
+		return errNotValidMail
+	}
+	flag = false
+	for i := lastapperance; i < len(checkEmail); i++ {
+		if checkEmail[i] == '.' {
+			flag = true
+		}
+	}
+	if !flag {
+		return errNotValidMail
+	}
+
 	if len(cr.MobileNum) < 10 || len(cr.MobileNum) > 10 {
 		return errInvalidMobNo
 	}

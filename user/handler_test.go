@@ -74,12 +74,12 @@ func TestCreateWhenInvalidRequestBody(t *testing.T) {
 
 func TestCreateWhenEmptyName(t *testing.T) {
 	cs := &usermock.Service{}
-	cs.On("Create", mock.Anything, mock.Anything).Return(nil, errors.New("Empty Name"))
+	// cs.On("Create", mock.Anything, mock.Anything).Return(nil, errors.New("Empty Name"))
 
 	rr := makeHTTPCall(user.Create(cs), http.MethodPost, "/users", `{
         "id":"67",
         "first_name": "",
-        "last_name": "",
+        "last_name": "Konde",
         "gender": "Male",
         "age": 22,
         "address": "Pune",
@@ -132,8 +132,8 @@ func TestListInternalError(t *testing.T) {
 //not find err
 func TestSuccessfullFindByID(t *testing.T) {
 	cs := &usermock.Service{}
-
-	cs.On("FindByID", mock.Anything, mock.Anything).Return(mock.Anything, nil)
+	var lr user.FindByIDResponse
+	cs.On("FindByID", mock.Anything, mock.Anything).Return(lr, nil)
 
 	rr := makeHTTPCall(user.FindByID(cs), http.MethodGet, "/users/83b34ad3-5803-47ce-b10e-1f9a940eb78", "")
 
@@ -143,7 +143,8 @@ func TestSuccessfullFindByID(t *testing.T) {
 
 func TestFindByIDWhenIDNotExist(t *testing.T) {
 	cs := &usermock.Service{}
-	cs.On("FindByID", mock.Anything, mock.Anything).Return(mock.Anything, nil)
+	var lr user.FindByIDResponse
+	cs.On("FindByID", mock.Anything, mock.Anything).Return(lr, errors.New("err"))
 
 	rr := makeHTTPCall(user.FindByID(cs), http.MethodGet, "/users/83b34ad3-5803-47ce-b10e-1f9a940eb78", "")
 

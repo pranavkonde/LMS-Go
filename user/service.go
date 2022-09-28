@@ -41,6 +41,10 @@ func (cs *UserService) GenerateJWT(ctx context.Context, Email string, Password s
 		cs.logger.Error("No user present", "err", err.Error())
 		return "", errNoUserId
 	}
+	if Password != user.Password {
+		return "", errWrongPassword
+
+	}
 	if err != nil {
 		cs.logger.Error("Error finding user", "err", err.Error(), "email", Email)
 		return

@@ -43,6 +43,12 @@ func Create(service Service) http.HandlerFunc {
 			return
 		}
 
+		err = c.Validate()
+		if err != nil {
+			api.Error(rw, http.StatusBadRequest, api.Response{Message: err.Error()})
+			return
+		}
+
 		err = service.Create(req.Context(), c)
 		if isBadRequest(err) {
 			api.Error(rw, http.StatusBadRequest, api.Response{Message: err.Error()})
@@ -68,7 +74,6 @@ func List(service Service) http.HandlerFunc {
 			return
 		}
 		if err != nil {
-			api.Success(rw, http.StatusCreated, api.Response{Message: "Enter List"})
 			api.Error(rw, http.StatusInternalServerError, api.Response{Message: err.Error()})
 			return
 		}
