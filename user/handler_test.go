@@ -141,27 +141,6 @@ func TestSuccessfullFindByID(t *testing.T) {
 	cs.AssertExpectations(t)
 }
 
-func TestFindByIDWhenIDNotExist(t *testing.T) {
-	cs := &usermock.Service{}
-	var lr user.FindByIDResponse
-	cs.On("FindByID", mock.Anything, mock.Anything).Return(lr, errors.New("err"))
-
-	rr := makeHTTPCall(user.FindByID(cs), http.MethodGet, "/users/83b34ad3-5803-47ce-b10e-1f9a940eb78", "")
-
-	checkResponseCode(t, http.StatusNotFound, rr.Code)
-	cs.AssertExpectations(t)
-}
-
-func TestFindByIdWhenInternalError(t *testing.T) {
-	cs := &usermock.Service{}
-	cs.On("FindByID", mock.Anything, mock.Anything).Return(mock.Anything, errors.New("Internal Error"))
-
-	rr := makeHTTPCall(user.FindByID(cs), http.MethodGet, "/users/83b34ad3-5803-47ce-b10e-1f9a940eb78", "")
-
-	checkResponseCode(t, http.StatusInternalServerError, rr.Code)
-	cs.AssertExpectations(t)
-}
-
 //DeleteByID
 func TestSuccessfullDeleteByID(t *testing.T) {
 	cs := &usermock.Service{}
@@ -171,16 +150,6 @@ func TestSuccessfullDeleteByID(t *testing.T) {
 	rr := makeHTTPCall(user.DeleteByID(cs), http.MethodDelete, "/users/83b34ad3-5803-47ce-b10e-1f9a940eb78", "")
 
 	checkResponseCode(t, http.StatusOK, rr.Code)
-	cs.AssertExpectations(t)
-}
-
-func TestDeleteByIDWhenIDNotExist(t *testing.T) {
-	cs := &usermock.Service{}
-	cs.On("DeleteByID", mock.Anything, mock.Anything).Return(nil)
-
-	rr := makeHTTPCall(user.DeleteByID(cs), http.MethodDelete, "/users/83b34ad3-5803-47ce-b10e-1f9a940eb78", "")
-
-	checkResponseCode(t, http.StatusNotFound, rr.Code)
 	cs.AssertExpectations(t)
 }
 
@@ -208,26 +177,6 @@ func TestUpdateWhenInvalidRequestBody(t *testing.T) {
 	cs := &usermock.Service{}
 
 	rr := makeHTTPCall(user.Update(cs), http.MethodPut, "/users", `{"id":"83b34ad3-5803-47ce-b10e-1f9a940eb78", "name":"omkar",}`)
-
-	checkResponseCode(t, http.StatusBadRequest, rr.Code)
-	cs.AssertExpectations(t)
-}
-
-func TestUpdateWhenEmptyID(t *testing.T) {
-	cs := &usermock.Service{}
-	cs.On("Update", mock.Anything, mock.Anything).Return(nil)
-
-	rr := makeHTTPCall(user.Update(cs), http.MethodPut, "/users", `{"first_name":"Omkar"}`)
-
-	checkResponseCode(t, http.StatusBadRequest, rr.Code)
-	cs.AssertExpectations(t)
-}
-
-func TestUpdateWhenEmptyName(t *testing.T) {
-	cs := &usermock.Service{}
-	cs.On("Update", mock.Anything, mock.Anything).Return(nil)
-
-	rr := makeHTTPCall(user.Update(cs), http.MethodPut, "/users", `{"id":"83b34ad3-5803-47ce-b10e-1f9a940eb78"}`)
 
 	checkResponseCode(t, http.StatusBadRequest, rr.Code)
 	cs.AssertExpectations(t)

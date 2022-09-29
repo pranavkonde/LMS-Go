@@ -123,5 +123,30 @@ func (ur UpdateRequest) Validate() (err error) {
 	if ur.FirstName == "" {
 		return errEmptyName
 	}
+	for _, r := range ur.FirstName {
+		if !unicode.IsLetter(r) {
+			return errInvalidFirstName
+		}
+	}
+	if ur.LastName == "" {
+		return errEmptyLastName
+	}
+	for _, r := range ur.LastName {
+		if !unicode.IsLetter(r) {
+			return errInvalidLastName
+		}
+	}
+	if ur.Gender == "" || ur.Gender != "Male" && ur.Gender != "male" && ur.Gender != "Female" && ur.Gender != "female" && ur.Gender != "other" && ur.Gender != "Other" {
+		return errInvalidGender
+	}
+	if ur.Address == "" {
+		return errEmptyAddress
+	}
+	if ur.MobileNum == "" {
+		return errEmptyMobNo
+	}
+	if len(ur.MobileNum) < 10 || len(ur.MobileNum) > 10 {
+		return errInvalidMobNo
+	}
 	return
 }

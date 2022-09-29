@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"fmt"
 )
 
 type User struct {
@@ -23,6 +24,7 @@ const (
     VALUES(?, ?,?,?,?,?,?,?,?,?)`
 	listUsersQuery          = `SELECT * FROM users`
 	findUserByIDQuery       = `SELECT * FROM users WHERE id = ?`
+	IDExistQuery            = `SELECT COUNT(*) FROM users WHERE users.id = ?`
 	deleteUserByIDQuery     = `DELETE FROM users WHERE id = ?`
 	updateUserQuery         = `UPDATE users SET first_name = ?, last_name=?, gender=?,age=?,address=?,password=?,mob_no = ? where id = ?`
 	findUserByEmailQuery    = `SELECT * FROM users WHERE email = ?`
@@ -84,21 +86,29 @@ func (s *store) DeleteUserByID(ctx context.Context, id string) (err error) {
 }
 
 func (s *store) UpdateUser(ctx context.Context, user *User) (err error) {
+	flag := 0
 
-	return Transact(ctx, s.db, &sql.TxOptions{}, func(ctx context.Context) error {
-		_, err = s.db.Exec(
-			updateUserQuery,
-			user.FirstName,
-			user.LastName,
-			user.Gender,
-			user.Age,
-			user.Address,
-			user.Password,
-			user.MobileNum,
-			user.ID,
-		)
-		return err
-	})
+	s.db.GetContext(ctx, &flag, IDExistQuery, user.ID)
+	fmt.Println(flag)
+
+	if flag == 0 {
+		return ErrIDNotExist
+	} else {
+		return Transact(ctx, s.db, &sql.TxOptions{}, func(ctx context.Context) error {
+			_, err = s.db.Exec(
+				updateUserQuery,
+				user.FirstName,
+				user.LastName,
+				user.Gender,
+				user.Age,
+				user.Address,
+				user.Password,
+				user.MobileNum,
+				user.ID,
+			)
+			return err
+		})
+	}
 }
 func (s *store) FindUserByEmail(ctx context.Context, email string) (user User, err error) {
 	err = WithDefaultTimeout(ctx, func(ctx context.Context) error {
