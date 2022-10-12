@@ -1,8 +1,6 @@
 package book
 
 import (
-	"unicode"
-
 	"github.com/pranavkonde/LMS-Go/db"
 )
 
@@ -48,28 +46,31 @@ func (cr createRequest) Validate() (err error) {
 	if cr.TotalCopies == 0 {
 		return errZeroCopies
 	}
-	if !unicode.IsNumber(rune(cr.TotalCopies)) {
-		return errInvalidTotalCopies
-	}
+	// if !unicode.IsNumber(rune(cr.TotalCopies)) {
+	// 	return errInvalidTotalCopies
+	// }
+	// if !unicode.IsNumber(rune(cr.AvailableCopies)) {
+	// 	return errInvalidAvailableCopies
+	// }
 	if cr.Price < 1 {
 		return errInvalidPrice
 	}
 	// if !unicode.IsNumber(cr.Price) {
 	//  return errInvalidPrice
 	// }
-	if !unicode.IsNumber(rune(cr.Price)) {
-		return errInvalidPrice
-	}
+	// if !unicode.IsNumber(rune(cr.Price)) {
+	// 	return errInvalidPrice
+	// }
 
-	if cr.Status != "available" {
+	if cr.Status != "Available" {
 		return errInvalidStatus
 	}
 	if cr.AvailableCopies > cr.TotalCopies {
 		return errInvalidAvailableCopies
 	}
-	if !unicode.IsNumber(rune(cr.AvailableCopies)) {
-		return err1InvalidAvailableCopies
-	}
+	// if !unicode.IsNumber(rune(cr.AvailableCopies)) {
+	// 	return err1InvalidAvailableCopies
+	// }
 	return
 }
 
