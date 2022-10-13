@@ -7,5 +7,7 @@ CREATE TABLE Transaction(
     user_id VARCHAR(64) NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(user_id) REFERENCES users(id),
+    on delete cascade,
     FOREIGN KEY(book_id) REFERENCES books(id)
+    on delete cascade
     );
