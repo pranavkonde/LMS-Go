@@ -16,6 +16,7 @@ require (
 	github.com/urfave/cli v1.22.10
 	github.com/urfave/negroni v1.0.0
 	go.uber.org/zap v1.23.0
+	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
 )
 
 require (
