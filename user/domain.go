@@ -15,7 +15,7 @@ type UpdateRequest struct {
 	Age       int    `json:"age"`
 	Address   string `json:"address"`
 	//  Email     string `json:"email"`
-	Password  string `json:"password"`
+	Password  string `gorm:"size:100" json:"password"`
 	MobileNum string `json:"mob_no"`
 	//Role      string `json:"role"`
 }
@@ -28,14 +28,24 @@ type CreateRequest struct {
 	Age       int    `json:"age"`
 	Address   string `json:"address"`
 	Email     string `json:"email"`
-	Password  string `json:"password"`
+	Password  string `gorm:"size:100" json:"password"`
 	MobileNum string `json:"mob_no"`
 	Role      string `json:"role"`
 }
+type UserResponse struct {
+	FirstName string `db:"first_name"`
+	LastName  string `db:"last_name"`
+	Gender    string `db:"gender"`
+	Address   string `db:"address"`
+	Age       int    `db:"age"`
+	Email     string `db:"email"`
+	MobileNum string `db:"mob_no"`
+	Role      string `db:"role"`
+}
 type UpdatePasswordStruct struct {
 	ID          string `json:"id"`
-	Password    string `json:"password"`
-	NewPassword string `json:"new_password"`
+	Password    string `gorm:"size:100" json:"password"`
+	NewPassword string `gorm:"size:100" json:"new_password"`
 }
 
 type FindByIDResponse struct {
