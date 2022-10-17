@@ -2,16 +2,16 @@ package transaction
 
 type Transaction struct {
 	ID         string `json:"id"`
-	IssueDate  int    `json:"issue_date"`
-	DueDate    int    `json:"due_date"`
-	ReturnDate int    `json:"return_date"`
+	IssueDate  string `json:"issue_date"`
+	DueDate    string `json:"due_date"`
+	ReturnDate string `json:"return_date"`
 	BookID     string `json:"book_id"`
 	UserID     string `json:"user_id"`
 }
 
 type listResponse struct {
 	Transactions []Transaction `json:"transactions"`
-	Count        int           `json:"total_count"` //to be updated
+	// Count        int           `json:"total_count"` //to be updated
 }
 type RequestStatus struct {
 	UserID string `json:"user_id"`
