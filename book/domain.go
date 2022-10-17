@@ -4,7 +4,7 @@ import (
 	"github.com/pranavkonde/LMS-Go/db"
 )
 
-type updateRequest struct {
+type UpdateRequest struct {
 	ID              string `json:"id"`
 	Name            string `json:"name"`
 	Author          string `json:"author"`
@@ -14,7 +14,7 @@ type updateRequest struct {
 	AvailableCopies int    `json:"availablecopies"`
 }
 
-type createRequest struct {
+type CreateRequest struct {
 	ID              string `json:"id"`
 	Name            string `json:"name"`
 	Author          string `json:"author"`
@@ -23,16 +23,21 @@ type createRequest struct {
 	Status          string `json:"status"`
 	AvailableCopies int    `json:"availablecopies"`
 }
+type bookresp struct {
+	Name   string `json:"name"`
+	Price  int    `json:"price"`
+	Status string `json:"status"`
+}
 
-type findByIDResponse struct {
+type FindByIDResponse struct {
 	Book db.Book `json:"book"`
 }
 
-type listResponse struct {
+type ListResponse struct {
 	Book []db.Book `json:"books"`
 }
 
-func (cr createRequest) Validate() (err error) {
+func (cr CreateRequest) Validate() (err error) {
 	if cr.Name == "" {
 		return errEmptyName
 	}
@@ -74,7 +79,7 @@ func (cr createRequest) Validate() (err error) {
 	return
 }
 
-func (ur updateRequest) Validate() (err error) {
+func (ur UpdateRequest) Validate() (err error) {
 	if ur.ID == "" {
 		return errEmptyID
 	}
