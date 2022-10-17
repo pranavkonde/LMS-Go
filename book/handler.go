@@ -12,14 +12,14 @@ import (
 func Create(service Service) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		// api.Success(rw, http.StatusOK, api.Response{Message: "hi"})
-		var c createRequest
+		var c CreateRequest
 		err := json.NewDecoder(req.Body).Decode(&c)
 		if err != nil {
 			api.Error(rw, http.StatusBadRequest, api.Response{Message: err.Error()})
 			return
 		}
 
-		err = service.create(req.Context(), c)
+		err = service.Create(req.Context(), c)
 		if isBadRequest(err) {
 			api.Error(rw, http.StatusBadRequest, api.Response{Message: err.Error()})
 			return
@@ -37,7 +37,7 @@ func Create(service Service) http.HandlerFunc {
 func List(service Service) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		// api.Success(rw, http.StatusCreated, api.Response{Message: "Enter List"})
-		resp, err := service.list(req.Context())
+		resp, err := service.List(req.Context())
 		if err == errNoBooks {
 			// api.Success(rw, http.StatusCreated, api.Response{Message: "Enter List"})
 			api.Error(rw, http.StatusNotFound, api.Response{Message: err.Error()})
@@ -48,8 +48,16 @@ func List(service Service) http.HandlerFunc {
 			api.Error(rw, http.StatusInternalServerError, api.Response{Message: err.Error()})
 			return
 		}
+		var bkresp []bookresp
+		for _, i := range resp.Book {
+			var bkresp1 bookresp
+			bkresp1.Name = i.Name
+			bkresp1.Price = i.Price
+			bkresp1.Status = i.Status
+			bkresp = append(bkresp, bkresp1)
+		}
 
-		api.Success(rw, http.StatusOK, resp)
+		api.Success(rw, http.StatusOK, bkresp)
 	})
 }
 
@@ -57,7 +65,7 @@ func FindByID(service Service) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 
-		resp, err := service.findByID(req.Context(), vars["id"])
+		resp, err := service.FindByID(req.Context(), vars["id"])
 
 		if err == errNoBookId {
 			api.Error(rw, http.StatusNotFound, api.Response{Message: err.Error()})
@@ -67,8 +75,11 @@ func FindByID(service Service) http.HandlerFunc {
 			api.Error(rw, http.StatusInternalServerError, api.Response{Message: err.Error()})
 			return
 		}
-
-		api.Success(rw, http.StatusOK, resp)
+		var bkresp1 bookresp
+		bkresp1.Name = resp.Book.Name
+		bkresp1.Price = resp.Book.Price
+		bkresp1.Status = resp.Book.Status
+		api.Success(rw, http.StatusOK, bkresp1)
 	})
 }
 
@@ -76,7 +87,7 @@ func DeleteByID(service Service) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 
-		err := service.deleteByID(req.Context(), vars["id"])
+		err := service.DeleteByID(req.Context(), vars["id"])
 		if err == errNoBookId {
 			api.Error(rw, http.StatusNotFound, api.Response{Message: err.Error()})
 			return
@@ -92,14 +103,14 @@ func DeleteByID(service Service) http.HandlerFunc {
 
 func Update(service Service) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		var c updateRequest
+		var c UpdateRequest
 		err := json.NewDecoder(req.Body).Decode(&c)
 		if err != nil {
 			api.Error(rw, http.StatusBadRequest, api.Response{Message: err.Error()})
 			return
 		}
 
-		err = service.update(req.Context(), c)
+		err = service.Update(req.Context(), c)
 		if isBadRequest(err) {
 			api.Error(rw, http.StatusBadRequest, api.Response{Message: err.Error()})
 			return
